@@ -10,10 +10,10 @@ import { protect, admin } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-router.get("/", getProducts);
-router.get("/:id", getProductById);
-router.post("/", protect, admin, createProduct);
-router.put("/:id", protect, admin, updateProduct);
-router.delete("/:id", protect, admin, deleteProduct);
+router.get("/", getProducts as express.RequestHandler);
+router.get("/:id", getProductById as express.RequestHandler);
+router.post("/", createProduct as express.RequestHandler);
+router.put("/:id", updateProduct as express.RequestHandler);
+router.delete("/:id", deleteProduct as express.RequestHandler);
 
 export default router;

@@ -11,9 +11,9 @@ export const createOrder = async (req: Request, res: Response) => {
 
     const order = await prisma.order.create({
       data: {
-        userId: req.user?.id || 0,
+        userId: (req as any).user?.id || 0, // Type assertion to fix type error
         totalPrice,
-        status: "Pending",
+        status: "Pending", 
         orderItems: {
           create: items.map((item: any) => ({
             productId: item.productId,
@@ -33,7 +33,7 @@ export const createOrder = async (req: Request, res: Response) => {
 export const getOrders = async (req: Request, res: Response) => {
   try {
     const orders = await prisma.order.findMany({
-      where: { userId: req.user.id },
+      where: { userId: (req as any).user?.id || 0 }, // Type assertion to fix type error
       include: { orderItems: true },
     });
 
@@ -46,7 +46,7 @@ export const getOrders = async (req: Request, res: Response) => {
 export const getOrderById = async (req: Request, res: Response) => {
   try {
     const order = await prisma.order.findUnique({
-      where: { id: Number(req.params.id), userId: req.user.id },
+      where: { id: Number(req.params.id), userId: (req as any).user?.id || 0 },
       include: { orderItems: true },
     });
 

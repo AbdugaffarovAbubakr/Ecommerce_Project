@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 export const getUserProfile = async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
-      where: { id: req.user.id },
+      where: { id: (req as any).user.id },
       select: { id: true, name: true, email: true },
     });
 
@@ -23,16 +23,15 @@ export const updateUserProfile = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
 
-    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    const user = await prisma.user.findUnique({ where: { id: (req as any).user.id } });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     const hashedPassword = password ? await bcrypt.hash(password, 10) : user.password;
-
     const updatedUser = await prisma.user.update({
-      where: { id: req.user.id },
+      where: { id: (req as any).user.id },
       data: { name, email, password: hashedPassword },
       select: { id: true, name: true, email: true },
     });
@@ -45,7 +44,7 @@ export const updateUserProfile = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    await prisma.user.delete({ where: { id: req.user.id } });
+    await prisma.user.delete({ where: { id: (req as any).user.id } });
     res.json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error" });

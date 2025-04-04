@@ -4,7 +4,7 @@ import prisma from "../config/database";
 export const getCart = async (req: Request, res: Response) => {
   try {
     const cart = await prisma.cart.findUnique({
-      where: { userId: req.user.id },
+      where: { userId: (req as any).user.id },
       include: { cartItems: true },
     });
 
@@ -21,14 +21,13 @@ export const getCart = async (req: Request, res: Response) => {
 export const addToCart = async (req: Request, res: Response) => {
   try {
     const { productId, quantity } = req.body;
-
     let cart = await prisma.cart.findUnique({
-      where: { userId: req.user.id },
+      where: { userId: (req as any).user.id },
     });
 
     if (!cart) {
       cart = await prisma.cart.create({
-        data: { userId: req.user.id },
+        data: { userId: (req as any).user.id },
       });
     }
 
@@ -55,7 +54,7 @@ export const removeFromCart = async (req: Request, res: Response) => {
 
     await prisma.cartItem.deleteMany({
       where: {
-        cart: { userId: req.user.id },
+        cart: { userId: (req as any).user.id },
         productId: Number(productId),
       },
     });
@@ -68,7 +67,7 @@ export const removeFromCart = async (req: Request, res: Response) => {
 
 export const clearCart = async (req: Request, res: Response) => {
   try {
-    await prisma.cart.deleteMany({ where: { userId: req.user.id } });
+    await prisma.cart.deleteMany({ where: { userId: (req as any).user.id } });
     res.json({ message: "Cart cleared" });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
