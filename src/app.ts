@@ -4,7 +4,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 
 // Routes
-import authRoutes from "./routes/authRoutes"; // 👈 AUTH ROUTE NI IMPORT QILISH
+import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
 import cartRoutes from "./routes/cartRoutes";

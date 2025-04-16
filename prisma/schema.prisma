@@ -15,57 +15,58 @@ model User {
   isAdmin   Boolean  @default(true)
   createdAt DateTime @default(now())
 
-  orders    Order[]
-  cart      Cart?
+  orders Order[]
+  cart   Cart?
 }
 
 model Product {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
-  description String  
+  description String
   price       Float
   stock       Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  cartItems  CartItem[] // Qo‘shildi
+  orderItems OrderItem[] // Qo‘shildi
 }
 
-
-
 model Cart {
-  id        String    @id @default(uuid())
-  userId    String    @unique
-  user      User      @relation(fields: [userId], references: [id])
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
   cartItems CartItem[]
 }
 
 model CartItem {
-  id        String   @id @default(uuid())
+  id        String @id @default(uuid())
   cartId    String
   productId String
-  quantity  Int      @default(1)
+  quantity  Int    @default(1)
 
-  cart      Cart     @relation(fields: [cartId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  cart    Cart    @relation(fields: [cartId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
 
 model Order {
-  id          String     @id @default(uuid())
-  userId      String
-  totalPrice  Float
-  status      String     @default("Pending")
-  createdAt   DateTime   @default(now())
+  id         String   @id @default(uuid())
+  userId     String
+  totalPrice Float
+  status     String   @default("Pending")
+  createdAt  DateTime @default(now())
 
-  user        User       @relation(fields: [userId], references: [id])
-  orderItems  OrderItem[]
+  user       User        @relation(fields: [userId], references: [id])
+  orderItems OrderItem[]
 }
 
 model OrderItem {
-  id        String   @id @default(uuid())
+  id        String @id @default(uuid())
   orderId   String
   productId String
-  quantity  Int      @default(1)
+  quantity  Int    @default(1)
   price     Float
 
-  order     Order    @relation(fields: [orderId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
